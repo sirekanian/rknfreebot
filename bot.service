@@ -1,0 +1,14 @@
+[Unit]
+Description=rknfreebot
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=20
+User=rknfreebot
+WorkingDirectory=/home/rknfreebot/bot
+ExecStart=/home/rknfreebot/bot/bin/rknfreebot
+
+[Install]
+WantedBy=multi-user.target
