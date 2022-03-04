@@ -27,20 +27,20 @@ class ControllerImpl(
     private val isAdmin = adminId == chatId.toString()
 
     override fun start(id: String?) {
-        val text = "Select server location. Note that location near to you may be the best choice."
-        val locations = repository.getLocations()
-        val buttons = locations.map { location ->
-            InlineKeyboardButton(location).apply { callbackData = "/get $location" }
-        }
-        sender.sendText(chatId, text, buttons.chunked(4))
+        showLocationButtons("Select server location. Note that location near to you may be the best choice.")
     }
 
     override fun getKey(location: String?) {
         if (location == null) {
-            start(location)
+            showLocationButtons("Select server location.")
             return
         }
-        val key = repository.getKey(location)
+        val index = repository.assignKey(location, chatId.toString())
+        if (index == null) {
+            showLocationButtons("There are no available keys in this location. Try another one.")
+            return
+        }
+        val key = repository.getKey(location, index)
         sender.sendFile(chatId, location + OVPN_EXTENSION, key)
     }
 
@@ -66,6 +66,18 @@ class ControllerImpl(
                 sender.logError("Cannot save ${document.fileName}", exception)
             }
         }
+    }
+
+    private fun showLocationButtons(text: String) {
+        val locations = repository.getLocations()
+        if (locations.isEmpty()) {
+            sender.sendText(chatId, "There are no available keys at the moment. Please try later.")
+            return
+        }
+        val buttons = locations.map { location ->
+            InlineKeyboardButton(location).apply { callbackData = "/get $location" }
+        }
+        sender.sendText(chatId, text, buttons.chunked(4))
     }
 
 }
