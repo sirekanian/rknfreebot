@@ -17,6 +17,7 @@ val botName = Config[BOT_USERNAME]
 private val commands: List<Command> =
     listOf(
         RegularCommand(listOf("/start"), Controller::start),
+        RegularCommand(listOf("/invite"), Controller::invite),
         RegularCommand(listOf("/get"), Controller::getKey),
         RegularCommand(listOf("/cat"), Controller::showCat),
     )

@@ -3,13 +3,20 @@ package com.sirekanyan.rknfreebot
 import com.sirekanyan.rknfreebot.config.Config
 import com.sirekanyan.rknfreebot.config.ConfigKey.DB_URL
 import com.sirekanyan.rknfreebot.repository.KeyRepositoryImpl
+import com.sirekanyan.rknfreebot.repository.UserRepositoryImpl
+import org.jetbrains.exposed.sql.Database
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.User
 
 class ControllerFactory {
 
-    private val repository = KeyRepositoryImpl(Config[DB_URL])
+    init {
+        Database.connect(Config[DB_URL])
+    }
+
+    private val repository = KeyRepositoryImpl()
+    private val userRepository = UserRepositoryImpl()
 
     fun createController(sender: Bot, update: Update): Controller {
         val message: Message
@@ -33,7 +40,7 @@ class ControllerFactory {
             else -> error("unknown type of update")
         }
         println("${user.id} (chat ${message.chatId}) => $data")
-        return ControllerImpl(data, sender, repository, message)
+        return ControllerImpl(data, sender, repository, userRepository, message, user)
     }
 
 }

@@ -13,10 +13,9 @@ interface KeyRepository {
     fun saveKey(location: String, index: Int, content: File)
 }
 
-class KeyRepositoryImpl(url: String) : KeyRepository {
+class KeyRepositoryImpl : KeyRepository {
 
     init {
-        Database.connect(url)
         transaction {
             SchemaUtils.create(Keys)
         }

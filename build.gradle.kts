@@ -16,6 +16,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:0.37.3")
     implementation("org.postgresql:postgresql:42.3.3")
     implementation("org.slf4j:slf4j-simple:1.7.36")
+    implementation("com.github.f4b6a3:uuid-creator:4.5.0")
 }
 
 application {

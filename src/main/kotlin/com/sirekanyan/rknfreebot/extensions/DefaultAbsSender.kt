@@ -17,6 +17,9 @@ import java.util.*
 fun DefaultAbsSender.sendText(chatId: Long, text: String): Message =
     execute(SendMessage(chatId.toString(), text))
 
+fun DefaultAbsSender.sendMarkdownText(chatId: Long, text: String): Message =
+    execute(SendMessage(chatId.toString(), text).apply { enableMarkdown(true) })
+
 fun DefaultAbsSender.sendText(chatId: Long, text: String, keyboard: List<List<InlineKeyboardButton>>) {
     execute(SendMessage(chatId.toString(), text).apply { replyMarkup = InlineKeyboardMarkup(keyboard) })
 }
