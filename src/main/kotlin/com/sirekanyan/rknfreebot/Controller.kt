@@ -1,9 +1,6 @@
 package com.sirekanyan.rknfreebot
 
-import com.sirekanyan.rknfreebot.extensions.downloadFileById
-import com.sirekanyan.rknfreebot.extensions.logError
-import com.sirekanyan.rknfreebot.extensions.sendCatPhoto
-import com.sirekanyan.rknfreebot.extensions.sendText
+import com.sirekanyan.rknfreebot.extensions.*
 import com.sirekanyan.rknfreebot.repository.KeyRepository
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.telegram.telegrambots.bots.DefaultAbsSender
@@ -14,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 interface Controller {
     val data: String
     fun start(id: String?)
+    fun getKey(location: String?)
     fun showCat(id: String?)
     fun onDocument(document: Document)
 }
@@ -37,6 +35,15 @@ class ControllerImpl(
         sender.sendText(chatId, text, buttons.chunked(4))
     }
 
+    override fun getKey(location: String?) {
+        if (location == null) {
+            start(location)
+            return
+        }
+        val key = repository.getKey(location)
+        sender.sendFile(chatId, location + OVPN_EXTENSION, key)
+    }
+
     override fun showCat(id: String?) {
         try {
             sender.sendCatPhoto(chatId, "Hello")
@@ -47,12 +54,10 @@ class ControllerImpl(
     }
 
     override fun onDocument(document: Document) {
-        val ovpnExtension = ".ovpn"
-        val locationDelimiter = "-"
-        if (isAdmin && document.fileName.endsWith(ovpnExtension)) {
-            val documentName = document.fileName.removeSuffix(ovpnExtension)
-            val location = documentName.substringBeforeLast(locationDelimiter)
-            val index = documentName.substringAfterLast(locationDelimiter).toInt()
+        if (isAdmin && document.fileName.endsWith(OVPN_EXTENSION)) {
+            val documentName = document.fileName.removeSuffix(OVPN_EXTENSION)
+            val location = documentName.substringBeforeLast(LOCATION_DELIMITER)
+            val index = documentName.substringAfterLast(LOCATION_DELIMITER).toInt()
             val file = sender.downloadFileById(document.fileId)
             try {
                 repository.saveKey(location, index, file)
