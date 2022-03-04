@@ -13,6 +13,8 @@ repositories {
 
 dependencies {
     implementation("org.telegram:telegrambots:5.7.1")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.37.3")
+    implementation("org.postgresql:postgresql:42.3.3")
     implementation("org.slf4j:slf4j-simple:1.7.36")
 }
 

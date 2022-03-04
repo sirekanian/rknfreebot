@@ -1,10 +1,12 @@
 package com.sirekanyan.rknfreebot.extensions
 
 import org.telegram.telegrambots.bots.DefaultAbsSender
+import org.telegram.telegrambots.meta.api.methods.GetFile
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto
 import org.telegram.telegrambots.meta.api.objects.InputFile
 import org.telegram.telegrambots.meta.api.objects.Message
+import java.io.File
 import java.net.URI
 import java.util.*
 
@@ -16,4 +18,9 @@ fun DefaultAbsSender.sendCatPhoto(chatId: Long, title: String) {
     val query = "filter=sepia&width=500&size=50&type=square&uuid=${UUID.randomUUID()}"
     val uri = URI("https", "cataas.com", path, query, null)
     execute(SendPhoto(chatId.toString(), InputFile(uri.toASCIIString())))
+}
+
+fun DefaultAbsSender.downloadFileById(fileId: String): File {
+    val fileInfo = execute(GetFile().also { it.fileId = fileId })
+    return downloadFile(fileInfo)
 }

@@ -38,6 +38,10 @@ class Bot : DefaultAbsSender(DefaultBotOptions()), LongPollingBot {
 
     private fun onUpdate(update: Update) {
         val controller = factory.createController(this, update)
+        update.message?.document?.let { document ->
+            controller.onDocument(document)
+            return
+        }
         for (command in commands) {
             if (command.execute(controller, controller.data)) {
                 return
