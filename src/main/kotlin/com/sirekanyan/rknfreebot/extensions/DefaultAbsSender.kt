@@ -6,12 +6,18 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto
 import org.telegram.telegrambots.meta.api.objects.InputFile
 import org.telegram.telegrambots.meta.api.objects.Message
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 import java.io.File
 import java.net.URI
 import java.util.*
 
 fun DefaultAbsSender.sendText(chatId: Long, text: String): Message =
     execute(SendMessage(chatId.toString(), text))
+
+fun DefaultAbsSender.sendText(chatId: Long, text: String, keyboard: List<List<InlineKeyboardButton>>) {
+    execute(SendMessage(chatId.toString(), text).apply { replyMarkup = InlineKeyboardMarkup(keyboard) })
+}
 
 fun DefaultAbsSender.sendCatPhoto(chatId: Long, title: String) {
     val path = if (title.isEmpty()) "/cat" else "/cat/says/${title.replace('/', ' ')}"

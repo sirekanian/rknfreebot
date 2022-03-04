@@ -9,9 +9,11 @@ import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.telegram.telegrambots.bots.DefaultAbsSender
 import org.telegram.telegrambots.meta.api.objects.Document
 import org.telegram.telegrambots.meta.api.objects.Message
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 
 interface Controller {
     val data: String
+    fun start(id: String?)
     fun showCat(id: String?)
     fun onDocument(document: Document)
 }
@@ -25,6 +27,15 @@ class ControllerImpl(
 
     private val chatId = message.chatId
     private val isAdmin = adminId == chatId.toString()
+
+    override fun start(id: String?) {
+        val text = "Select server location. Note that location near to you may be the best choice."
+        val locations = repository.getLocations()
+        val buttons = locations.map { location ->
+            InlineKeyboardButton(location).apply { callbackData = "/get $location" }
+        }
+        sender.sendText(chatId, text, buttons.chunked(4))
+    }
 
     override fun showCat(id: String?) {
         try {
