@@ -20,6 +20,7 @@ private val commands: List<Command> =
         RegularCommand(listOf("/invite"), Controller::invite),
         RegularCommand(listOf("/get"), Controller::getKey),
         RegularCommand(listOf("/cat"), Controller::showCat),
+        RegularCommand(listOf("/stat"), Controller::showStat),
     )
 
 class Bot : DefaultAbsSender(DefaultBotOptions()), LongPollingBot {

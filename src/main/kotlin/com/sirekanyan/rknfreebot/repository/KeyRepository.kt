@@ -11,6 +11,7 @@ interface KeyRepository {
     fun assignKey(location: String, chat: String): Int?
     fun getKey(location: String, index: Int): ByteArray
     fun saveKey(location: String, index: Int, content: File)
+    fun getCount(): Pair<Long, Long>
 }
 
 class KeyRepositoryImpl : KeyRepository {
@@ -53,5 +54,12 @@ class KeyRepositoryImpl : KeyRepository {
             }
         }
     }
+
+    override fun getCount(): Pair<Long, Long> =
+        transaction {
+            val free = Keys.slice(Keys.chat).select { Keys.chat eq null }.count()
+            val total = Keys.slice(Keys.chat).selectAll().count()
+            free to total
+        }
 
 }

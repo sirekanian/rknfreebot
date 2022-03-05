@@ -16,6 +16,7 @@ interface Controller {
     fun invite(id: String?)
     fun getKey(location: String?)
     fun showCat(id: String?)
+    fun showStat(id: String?)
     fun onDocument(document: Document)
 }
 
@@ -93,6 +94,11 @@ class ControllerImpl(
             sender.sendText(chatId, "Hi")
             sender.logError("Cannot send a cat", exception)
         }
+    }
+
+    override fun showStat(id: String?) {
+        val (free, total) = repository.getCount()
+        sender.logInfo("$free/$total")
     }
 
     override fun onDocument(document: Document) {
