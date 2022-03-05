@@ -12,8 +12,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 interface Controller {
     val data: String
-    fun start(id: String?)
-    fun invite(code: String?)
+    fun start(code: String?)
+    fun invite(id: String?)
     fun getKey(location: String?)
     fun showCat(id: String?)
     fun onDocument(document: Document)
@@ -32,44 +32,40 @@ class ControllerImpl(
     private val username = user.getFullName()
     private val isAdmin = adminId == chatId.toString()
 
-    override fun start(id: String?) {
-        if (!isAuthorized()) {
-            sender.sendText(chatId, "Ask to other users to send you an invitation code.")
-            sender.logInfo("#chat$chatId ($username) is #unauthorized")
+    override fun start(code: String?) {
+        when {
+            isAuthorized() -> {
+                showLocationButtons("Select server location. Note that location near to you may be the best choice.")
+                sender.logInfo("#chat$chatId ($username) is #started")
+            }
+            code == null -> {
+                sender.sendText(chatId, "Ask to other users to send you an invitation code.")
+                sender.logInfo("#chat$chatId ($username) is #unauthorized")
+            }
+            userRepository.hasInvite(code) -> {
+                userRepository.addChat(chatId)
+                showLocationButtons("Hi and welcome! Select server location.")
+                sender.logInfo("#chat$chatId <= #invite$code")
+            }
+            else -> {
+                sender.sendText(chatId, "Invitation code was expired, ask to your friend for another one.")
+            }
+        }
+    }
+
+    override fun invite(id: String?) {
+        if (id != null) {
+            sender.sendText(chatId, "Invitation code was expired, ask to your friend for another one.")
             return
         }
-        showLocationButtons("Select server location. Note that location near to you may be the best choice.")
-        sender.logInfo("#chat$chatId ($username) is #started")
-    }
-
-    override fun invite(code: String?) {
-        if (code == null) {
-            sendInvitation()
-        } else {
-            receiveInvitation(code)
-        }
-    }
-
-    private fun sendInvitation() {
         if (!isAuthorized()) {
             sender.sendText(chatId, "You're not invited yet. Ask other users to send you an invite.")
             return
         }
         val code = randomUuidBase62()
-        sender.sendText(chatId, "Ask your friend to send the next command to the bot @$botName.")
-        sender.sendMarkdownText(chatId, "`/invite $code`")
+        sender.sendCoupon(chatId, code)
         userRepository.addInvite(code)
         sender.logInfo("#chat$chatId => #invite$code")
-    }
-
-    private fun receiveInvitation(code: String) {
-        if (!userRepository.hasInvite(code)) {
-            sender.sendText(chatId, "Invitation code was expired, ask to your friend for another one.")
-            return
-        }
-        userRepository.addChat(chatId)
-        showLocationButtons("Hi and welcome! Select server location.")
-        sender.logInfo("#chat$chatId <= #invite$code")
     }
 
     private fun isAuthorized(): Boolean =

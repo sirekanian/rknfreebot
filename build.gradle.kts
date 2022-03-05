@@ -30,6 +30,7 @@ distributions {
     main {
         contents {
             from("bot.properties")
+            from("data/coupon.webp") { into("data") }
         }
     }
 }
