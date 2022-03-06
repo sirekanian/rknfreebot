@@ -7,15 +7,15 @@ import kotlin.text.RegexOption.IGNORE_CASE
 
 class RegularCommand(
     private val words: List<String>,
-    private val action: ((Controller, String?) -> Unit)? = null,
+    private val action: (Controller, String?) -> Unit,
 ) : Command {
 
     override fun execute(controller: Controller, message: String?): Boolean {
         val argument = parseArgument(message)
         when {
             argument == null -> return false
-            argument.isBlank() -> action?.invoke(controller, null)
-            else -> action?.invoke(controller, argument)
+            argument.isBlank() -> action.invoke(controller, null)
+            else -> action.invoke(controller, argument)
         }
         return true
     }

@@ -1,6 +1,7 @@
 package com.sirekanyan.rknfreebot
 
 import com.sirekanyan.rknfreebot.command.Command
+import com.sirekanyan.rknfreebot.command.LocalizedCommand
 import com.sirekanyan.rknfreebot.command.RegularCommand
 import com.sirekanyan.rknfreebot.config.Config
 import com.sirekanyan.rknfreebot.config.ConfigKey.*
@@ -8,7 +9,9 @@ import com.sirekanyan.rknfreebot.extensions.logError
 import com.sirekanyan.rknfreebot.extensions.logInfo
 import org.telegram.telegrambots.bots.DefaultAbsSender
 import org.telegram.telegrambots.bots.DefaultBotOptions
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands
 import org.telegram.telegrambots.meta.api.objects.Update
+import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault
 import org.telegram.telegrambots.meta.generics.LongPollingBot
 import org.telegram.telegrambots.util.WebhookUtils
 
@@ -16,8 +19,8 @@ val adminId = Config[ADMIN_ID]
 val botName = Config[BOT_USERNAME]
 private val commands: List<Command> =
     listOf(
-        RegularCommand(listOf("/start"), Controller::start),
-        RegularCommand(listOf("/invite"), Controller::invite),
+        LocalizedCommand("/start", Controller::start, "get a key for free", "получить ключ бесплатно"),
+        LocalizedCommand("/invite", Controller::invite, "invite a friend", "пригласить друга"),
         RegularCommand(listOf("/get"), Controller::getKey),
         RegularCommand(listOf("/cat"), Controller::showCat),
         RegularCommand(listOf("/stat"), Controller::showStat),
@@ -26,6 +29,15 @@ private val commands: List<Command> =
 class Bot : DefaultAbsSender(DefaultBotOptions()), LongPollingBot {
 
     private val factory = ControllerFactory()
+
+    init {
+        val localizedCommands = commands.filterIsInstance<LocalizedCommand>()
+        val ruCommands = localizedCommands.map(LocalizedCommand::ru)
+        val enCommands = localizedCommands.map(LocalizedCommand::en)
+        val scope = BotCommandScopeDefault.builder().build()
+        execute(SetMyCommands(ruCommands, scope, "ru"))
+        execute(SetMyCommands(enCommands, scope, null))
+    }
 
     override fun getBotUsername(): String = botName
 
