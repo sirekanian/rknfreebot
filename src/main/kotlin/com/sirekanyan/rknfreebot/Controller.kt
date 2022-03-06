@@ -32,39 +32,40 @@ class ControllerImpl(
     private val chatId = message.chatId
     private val username = user.getFullName()
     private val isAdmin = adminId == chatId.toString()
+    private val resources = createResources(user.languageCode)
 
     override fun start(code: String?) {
         when {
             isAuthorized() -> {
-                showLocationButtons("Select server location. Note that location near to you may be the best choice.")
+                showLocationButtons(resources.helloMessage)
                 sender.logInfo("#chat$chatId ($username) is #started")
             }
             code == null -> {
-                sender.sendText(chatId, "Ask to other users to send you an invitation code.")
+                sender.sendText(chatId, resources.notAuthorized)
                 sender.logInfo("#chat$chatId ($username) is #unauthorized")
             }
             userRepository.hasInvite(code) -> {
                 userRepository.addChat(chatId)
-                showLocationButtons("Hi and welcome! Select server location.")
+                showLocationButtons(resources.welcomeMessage)
                 sender.logInfo("#chat$chatId <= #invite$code")
             }
             else -> {
-                sender.sendText(chatId, "Invitation code was expired, ask to your friend for another one.")
+                sender.sendText(chatId, resources.invitationExpired)
             }
         }
     }
 
     override fun invite(id: String?) {
         if (id != null) {
-            sender.sendText(chatId, "Invitation code was expired, ask to your friend for another one.")
+            sender.sendText(chatId, resources.invitationExpired)
             return
         }
         if (!isAuthorized()) {
-            sender.sendText(chatId, "You're not invited yet. Ask other users to send you an invite.")
+            sender.sendText(chatId, resources.notAuthorized)
             return
         }
         val code = randomUuidBase62()
-        sender.sendCoupon(chatId, code)
+        sender.sendCoupon(chatId, resources.shareButton, resources.shareText, code)
         userRepository.addInvite(code)
         sender.logInfo("#chat$chatId => #invite$code")
     }
@@ -73,13 +74,10 @@ class ControllerImpl(
         isAdmin || userRepository.hasChat(chatId)
 
     override fun getKey(location: String?) {
-        if (location == null) {
-            showLocationButtons("Select server location.")
-            return
-        }
+        if (location == null) return
         val index = repository.assignKey(location, chatId.toString())
         if (index == null) {
-            showLocationButtons("There are no available keys in this location. Try another one.")
+            showLocationButtons(resources.emptyKeysForLocation)
             return
         }
         sender.logInfo("Sending $location-$index$OVPN_EXTENSION to #chat$chatId ($username)")
@@ -119,7 +117,7 @@ class ControllerImpl(
     private fun showLocationButtons(text: String) {
         val locations = repository.getLocations()
         if (locations.isEmpty()) {
-            sender.sendText(chatId, "There are no available keys at the moment. Please try later.")
+            sender.sendText(chatId, resources.emptyLocations)
             return
         }
         val buttons = locations.map { location ->

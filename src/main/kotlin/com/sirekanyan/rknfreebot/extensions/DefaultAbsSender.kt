@@ -25,12 +25,11 @@ fun DefaultAbsSender.sendText(chatId: Long, text: String, keyboard: List<List<In
     execute(SendMessage(chatId.toString(), text).apply { replyMarkup = InlineKeyboardMarkup(keyboard) })
 }
 
-fun DefaultAbsSender.sendCoupon(chatId: Long, code: String) {
+fun DefaultAbsSender.sendCoupon(chatId: Long, buttonText: String, shareText: String, invitationCode: String) {
     fun encode(parameter: String) = URLEncoder.encode(parameter, StandardCharsets.UTF_8)
-    val shareUrl = "https://t.me/$botName?start=$code"
-    val shareText = "free vpn for friends"
+    val shareUrl = "https://t.me/$botName?start=$invitationCode"
     val url = "https://t.me/share/url?url=${encode(shareUrl)}&text=${encode(shareText)}"
-    val button = InlineKeyboardButton("Share with friend").also { it.url = url }
+    val button = InlineKeyboardButton(buttonText).also { it.url = url }
     execute(SendSticker(chatId.toString(), InputFile(File("data/coupon.webp"))).apply {
         replyMarkup = InlineKeyboardMarkup(listOf(listOf(button)))
     })
