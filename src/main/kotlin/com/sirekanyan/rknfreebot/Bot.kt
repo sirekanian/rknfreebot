@@ -21,6 +21,7 @@ private val commands: List<Command> =
     listOf(
         LocalizedCommand("/start", Controller::start, "get a key for free", "получить ключ бесплатно"),
         LocalizedCommand("/invite", Controller::invite, "invite a friend", "пригласить друга"),
+        LocalizedCommand("/help", Controller::help, "help", "как пользоваться"),
         RegularCommand(listOf("/get"), Controller::getKey),
         RegularCommand(listOf("/cat"), Controller::showCat),
         RegularCommand(listOf("/stat"), Controller::showStat),

@@ -14,6 +14,7 @@ interface Controller {
     val data: String
     fun start(code: String?)
     fun invite(id: String?)
+    fun help(id: String?)
     fun getKey(location: String?)
     fun showCat(id: String?)
     fun showStat(id: String?)
@@ -72,6 +73,10 @@ class ControllerImpl(
 
     private fun isAuthorized(): Boolean =
         isAdmin || userRepository.hasChat(chatId)
+
+    override fun help(id: String?) {
+        sender.sendMarkdownText(chatId, resources.help)
+    }
 
     override fun getKey(location: String?) {
         if (location == null) return
