@@ -17,7 +17,7 @@ interface Controller {
     fun help(id: String?)
     fun getKey(location: String?)
     fun showCat(id: String?)
-    fun showStat(id: String?)
+    fun showStatus(id: String?)
     fun onDocument(document: Document)
 }
 
@@ -80,13 +80,12 @@ class ControllerImpl(
 
     override fun getKey(location: String?) {
         if (location == null) return
-        val index = repository.assignKey(location, chatId.toString())
-        if (index == null) {
+        val key = repository.ejectKey(location)
+        if (key == null) {
             showLocationButtons(resources.emptyKeysForLocation)
             return
         }
-        sender.logInfo("Sending $location-$index$OVPN_EXTENSION to #chat$chatId ($username)")
-        val key = repository.getKey(location, index)
+        sender.logInfo("Sending $location$OVPN_EXTENSION to #chat$chatId ($username)")
         sender.sendFile(chatId, location + OVPN_EXTENSION, key)
     }
 
@@ -99,10 +98,16 @@ class ControllerImpl(
         }
     }
 
-    override fun showStat(id: String?) {
-        val (free, total) = repository.getCount()
-        sender.logInfo("$free/$total")
+    override fun showStatus(id: String?) {
+        if (isAdmin) {
+            val counts = repository.getCounts().toSortedMap()
+            val total = join("Total" to counts.values.sum())
+            sender.logInfo(counts.toList().joinToString("\n", postfix = "\n") { join(it) } + total)
+        }
     }
+
+    private fun join(pair: Pair<String, Long>): String =
+        "${pair.first}: ${pair.second}"
 
     override fun onDocument(document: Document) {
         if (isAdmin && document.fileName.endsWith(OVPN_EXTENSION)) {

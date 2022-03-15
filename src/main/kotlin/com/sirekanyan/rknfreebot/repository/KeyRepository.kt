@@ -8,10 +8,9 @@ import java.io.File
 
 interface KeyRepository {
     fun getLocations(): List<String>
-    fun assignKey(location: String, chat: String): Int?
-    fun getKey(location: String, index: Int): ByteArray
+    fun ejectKey(location: String): ByteArray?
     fun saveKey(location: String, index: Int, content: File)
-    fun getCount(): Pair<Long, Long>
+    fun getCounts(): Map<String, Long>
 }
 
 class KeyRepositoryImpl : KeyRepository {
@@ -27,23 +26,17 @@ class KeyRepositoryImpl : KeyRepository {
             Keys.slice(Keys.location).selectAll().withDistinct().map { it[Keys.location] }
         }
 
-    override fun assignKey(location: String, chat: String): Int? =
+    override fun ejectKey(location: String): ByteArray? =
         transaction {
-            val index = findUnassignedIndex(location) ?: return@transaction null
-            val updated = assignKeyByIndex(location, index, chat)
-            index.takeIf { updated == 1 }
+            val key = findKeyByLocation(location) ?: return@transaction null
+            val index = key[Keys.index]
+            val content = key[Keys.content]
+            Keys.deleteWhere { (Keys.location eq location) and (Keys.index eq index) }
+            content.bytes
         }
 
-    private fun findUnassignedIndex(location: String): Int? =
-        Keys.select { (Keys.location eq location) and (Keys.chat eq null) }.limit(1).singleOrNull()?.get(Keys.index)
-
-    private fun assignKeyByIndex(location: String, index: Int, chat: String): Int =
-        Keys.update({ (Keys.location eq location) and (Keys.index eq index) }) { it[Keys.chat] = chat }
-
-    override fun getKey(location: String, index: Int): ByteArray =
-        transaction {
-            Keys.select { (Keys.location eq location) and (Keys.index eq index) }.single()[Keys.content].bytes
-        }
+    private fun findKeyByLocation(location: String): ResultRow? =
+        Keys.select { Keys.location eq location }.limit(1).singleOrNull()
 
     override fun saveKey(location: String, index: Int, content: File) {
         transaction {
@@ -55,11 +48,11 @@ class KeyRepositoryImpl : KeyRepository {
         }
     }
 
-    override fun getCount(): Pair<Long, Long> =
+    override fun getCounts(): Map<String, Long> =
         transaction {
-            val free = Keys.slice(Keys.chat).select { Keys.chat eq null }.count()
-            val total = Keys.slice(Keys.chat).selectAll().count()
-            free to total
+            Keys.slice(Keys.location, Keys.location.count()).selectAll().groupBy(Keys.location).associate {
+                it[Keys.location] to it[Keys.location.count()]
+            }
         }
 
 }

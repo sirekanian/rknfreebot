@@ -24,7 +24,7 @@ private val commands: List<Command> =
         LocalizedCommand("/help", Controller::help, "help", "как пользоваться"),
         RegularCommand(listOf("/get"), Controller::getKey),
         RegularCommand(listOf("/cat"), Controller::showCat),
-        RegularCommand(listOf("/stat"), Controller::showStat),
+        RegularCommand(listOf("/status"), Controller::showStatus),
     )
 
 class Bot : DefaultAbsSender(DefaultBotOptions()), LongPollingBot {
