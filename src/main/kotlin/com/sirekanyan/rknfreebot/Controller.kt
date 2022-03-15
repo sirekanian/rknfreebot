@@ -120,7 +120,7 @@ class ControllerImpl(
     }
 
     private fun showLocationButtons(text: String) {
-        val locations = repository.getLocations()
+        val locations = repository.getLocations().sorted()
         if (locations.isEmpty()) {
             sender.sendText(chatId, resources.emptyLocations)
             return
@@ -128,7 +128,7 @@ class ControllerImpl(
         val buttons = locations.map { location ->
             InlineKeyboardButton(location).apply { callbackData = "/get $location" }
         }
-        sender.sendText(chatId, text, buttons.chunked(4))
+        sender.sendText(chatId, text, buttons.chunked(3))
     }
 
 }
