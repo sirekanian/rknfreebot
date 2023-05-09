@@ -17,6 +17,7 @@ import org.telegram.telegrambots.util.WebhookUtils
 
 val adminId = Config[ADMIN_ID]
 val botName = Config[BOT_USERNAME]
+val botToken = Config[BOT_TOKEN]
 private val commands: List<Command> =
     listOf(
         LocalizedCommand("/start", Controller::start, "get a key for free", "получить ключ бесплатно"),
@@ -27,7 +28,7 @@ private val commands: List<Command> =
         RegularCommand(listOf("/status"), Controller::showStatus),
     )
 
-class Bot : DefaultAbsSender(DefaultBotOptions()), LongPollingBot {
+class Bot : DefaultAbsSender(DefaultBotOptions(), botToken), LongPollingBot {
 
     private val factory = ControllerFactory()
 
@@ -41,8 +42,6 @@ class Bot : DefaultAbsSender(DefaultBotOptions()), LongPollingBot {
     }
 
     override fun getBotUsername(): String = botName
-
-    override fun getBotToken(): String = Config[BOT_TOKEN]
 
     override fun onUpdateReceived(update: Update) {
         try {

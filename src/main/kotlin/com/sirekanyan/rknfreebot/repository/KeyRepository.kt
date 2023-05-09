@@ -2,6 +2,7 @@ package com.sirekanyan.rknfreebot.repository
 
 import com.sirekanyan.rknfreebot.repository.model.Keys
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.statements.api.ExposedBlob
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
