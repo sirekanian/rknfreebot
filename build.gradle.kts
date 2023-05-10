@@ -4,7 +4,7 @@ plugins {
     id("org.sirekanyan.version-checker") version "1.0.6"
 }
 
-group = "com.sirekanyan"
+group = "org.sirekanyan"
 version = "1.0"
 
 repositories {
@@ -20,7 +20,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("com.sirekanyan.rknfreebot.Main")
+    mainClass.set("org.sirekanyan.rknfreebot.Main")
     if (hasProperty("debug")) {
         applicationDefaultJvmArgs = listOf("-Ddebug")
     }
