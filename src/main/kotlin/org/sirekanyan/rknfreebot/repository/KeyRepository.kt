@@ -1,6 +1,6 @@
-package com.sirekanyan.rknfreebot.repository
+package org.sirekanyan.rknfreebot.repository
 
-import com.sirekanyan.rknfreebot.repository.model.Keys
+import org.sirekanyan.rknfreebot.repository.model.Keys
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.statements.api.ExposedBlob

@@ -1,4 +1,4 @@
-package com.sirekanyan.rknfreebot.repository.model
+package org.sirekanyan.rknfreebot.repository.model
 
 import org.jetbrains.exposed.sql.Table
 

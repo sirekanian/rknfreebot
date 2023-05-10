@@ -1,6 +1,6 @@
-package com.sirekanyan.rknfreebot.command
+package org.sirekanyan.rknfreebot.command
 
-import com.sirekanyan.rknfreebot.Controller
+import org.sirekanyan.rknfreebot.Controller
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand
 
 class LocalizedCommand(

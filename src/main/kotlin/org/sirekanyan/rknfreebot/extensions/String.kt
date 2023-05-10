@@ -1,4 +1,4 @@
-package com.sirekanyan.rknfreebot.extensions
+package org.sirekanyan.rknfreebot.extensions
 
 import com.github.f4b6a3.uuid.codec.base.Base62Codec
 import java.util.*

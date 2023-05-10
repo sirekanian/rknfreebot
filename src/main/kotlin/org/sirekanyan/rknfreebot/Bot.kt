@@ -1,12 +1,12 @@
-package com.sirekanyan.rknfreebot
+package org.sirekanyan.rknfreebot
 
-import com.sirekanyan.rknfreebot.command.Command
-import com.sirekanyan.rknfreebot.command.LocalizedCommand
-import com.sirekanyan.rknfreebot.command.RegularCommand
-import com.sirekanyan.rknfreebot.config.Config
-import com.sirekanyan.rknfreebot.config.ConfigKey.*
-import com.sirekanyan.rknfreebot.extensions.logError
-import com.sirekanyan.rknfreebot.extensions.logInfo
+import org.sirekanyan.rknfreebot.command.Command
+import org.sirekanyan.rknfreebot.command.LocalizedCommand
+import org.sirekanyan.rknfreebot.command.RegularCommand
+import org.sirekanyan.rknfreebot.config.Config
+import org.sirekanyan.rknfreebot.config.ConfigKey.*
+import org.sirekanyan.rknfreebot.extensions.logError
+import org.sirekanyan.rknfreebot.extensions.logInfo
 import org.telegram.telegrambots.bots.DefaultAbsSender
 import org.telegram.telegrambots.bots.DefaultBotOptions
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands

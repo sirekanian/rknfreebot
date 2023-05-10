@@ -1,6 +1,6 @@
-package com.sirekanyan.rknfreebot.extensions
+package org.sirekanyan.rknfreebot.extensions
 
-import com.sirekanyan.rknfreebot.adminId
+import org.sirekanyan.rknfreebot.adminId
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.InputFile

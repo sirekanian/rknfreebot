@@ -1,7 +1,7 @@
-package com.sirekanyan.rknfreebot.repository
+package org.sirekanyan.rknfreebot.repository
 
-import com.sirekanyan.rknfreebot.repository.model.Chats
-import com.sirekanyan.rknfreebot.repository.model.Invites
+import org.sirekanyan.rknfreebot.repository.model.Chats
+import org.sirekanyan.rknfreebot.repository.model.Invites
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.select

@@ -1,6 +1,6 @@
-package com.sirekanyan.rknfreebot.extensions
+package org.sirekanyan.rknfreebot.extensions
 
-import com.sirekanyan.rknfreebot.botName
+import org.sirekanyan.rknfreebot.botName
 import org.telegram.telegrambots.bots.DefaultAbsSender
 import org.telegram.telegrambots.meta.api.methods.GetFile
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument

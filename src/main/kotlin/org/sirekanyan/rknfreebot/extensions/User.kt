@@ -1,4 +1,4 @@
-package com.sirekanyan.rknfreebot.extensions
+package org.sirekanyan.rknfreebot.extensions
 
 import org.telegram.telegrambots.meta.api.objects.User
 

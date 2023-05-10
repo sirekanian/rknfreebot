@@ -1,4 +1,4 @@
-package com.sirekanyan.rknfreebot
+package org.sirekanyan.rknfreebot
 
 const val OVPN_EXTENSION = ".ovpn"
 const val LOCATION_DELIMITER = "-"

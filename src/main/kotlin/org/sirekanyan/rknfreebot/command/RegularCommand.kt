@@ -1,7 +1,7 @@
-package com.sirekanyan.rknfreebot.command
+package org.sirekanyan.rknfreebot.command
 
-import com.sirekanyan.rknfreebot.Controller
-import com.sirekanyan.rknfreebot.botName
+import org.sirekanyan.rknfreebot.Controller
+import org.sirekanyan.rknfreebot.botName
 import java.util.regex.Pattern
 import kotlin.text.RegexOption.IGNORE_CASE
 

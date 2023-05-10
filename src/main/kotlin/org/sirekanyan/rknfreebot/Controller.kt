@@ -1,8 +1,8 @@
-package com.sirekanyan.rknfreebot
+package org.sirekanyan.rknfreebot
 
-import com.sirekanyan.rknfreebot.extensions.*
-import com.sirekanyan.rknfreebot.repository.KeyRepository
-import com.sirekanyan.rknfreebot.repository.UserRepository
+import org.sirekanyan.rknfreebot.extensions.*
+import org.sirekanyan.rknfreebot.repository.KeyRepository
+import org.sirekanyan.rknfreebot.repository.UserRepository
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.telegram.telegrambots.bots.DefaultAbsSender
 import org.telegram.telegrambots.meta.api.objects.Document

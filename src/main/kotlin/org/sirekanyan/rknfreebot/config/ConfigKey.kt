@@ -1,4 +1,4 @@
-package com.sirekanyan.rknfreebot.config
+package org.sirekanyan.rknfreebot.config
 
 enum class ConfigKey {
     BOT_USERNAME,

@@ -1,9 +1,9 @@
-package com.sirekanyan.rknfreebot
+package org.sirekanyan.rknfreebot
 
-import com.sirekanyan.rknfreebot.config.Config
-import com.sirekanyan.rknfreebot.config.ConfigKey.DB_URL
-import com.sirekanyan.rknfreebot.repository.KeyRepositoryImpl
-import com.sirekanyan.rknfreebot.repository.UserRepositoryImpl
+import org.sirekanyan.rknfreebot.config.Config
+import org.sirekanyan.rknfreebot.config.ConfigKey.DB_URL
+import org.sirekanyan.rknfreebot.repository.KeyRepositoryImpl
+import org.sirekanyan.rknfreebot.repository.UserRepositoryImpl
 import org.jetbrains.exposed.sql.Database
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
