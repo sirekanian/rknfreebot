@@ -18,17 +18,17 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.util.*
 
-fun DefaultAbsSender.sendText(chatId: Long, text: String): Message =
+fun AbsSender.sendText(chatId: Long, text: String): Message =
     execute(SendMessage(chatId.toString(), text))
 
-fun DefaultAbsSender.sendMarkdownText(chatId: Long, text: String): Message =
+fun AbsSender.sendMarkdownText(chatId: Long, text: String): Message =
     execute(SendMessage(chatId.toString(), text).apply { enableMarkdown(true) })
 
-fun DefaultAbsSender.sendText(chatId: Long, text: String, keyboard: List<List<InlineKeyboardButton>>) {
+fun AbsSender.sendText(chatId: Long, text: String, keyboard: List<List<InlineKeyboardButton>>) {
     execute(SendMessage(chatId.toString(), text).apply { replyMarkup = InlineKeyboardMarkup(keyboard) })
 }
 
-fun DefaultAbsSender.sendCoupon(chatId: Long, buttonText: String, shareText: String, invitationCode: String) {
+fun AbsSender.sendCoupon(chatId: Long, buttonText: String, shareText: String, invitationCode: String) {
     fun encode(parameter: String) = URLEncoder.encode(parameter, StandardCharsets.UTF_8)
     val shareUrl = "https://t.me/$botName?start=$invitationCode"
     val url = "https://t.me/share/url?url=${encode(shareUrl)}&text=${encode(shareText)}"
@@ -46,7 +46,7 @@ fun AbsSender.sendFile(chatId: Long, name: String, content: ByteArray): Message 
         }
     )
 
-fun DefaultAbsSender.sendCatPhoto(chatId: Long, title: String) {
+fun AbsSender.sendCatPhoto(chatId: Long, title: String) {
     val path = if (title.isEmpty()) "/cat" else "/cat/says/${title.replace('/', ' ')}"
     val query = "filter=sepia&width=500&size=50&type=square&uuid=${UUID.randomUUID()}"
     val uri = URI("https", "cataas.com", path, query, null)
