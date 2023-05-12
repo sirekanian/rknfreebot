@@ -1,8 +1,8 @@
 package org.sirekanyan.rknfreebot
 
-import org.sirekanyan.rknfreebot.command.Command
 import org.sirekanyan.rknfreebot.command.LocalizedCommand
 import org.sirekanyan.rknfreebot.command.RegularCommand
+import org.sirekanyan.rknfreebot.command.TextCommand
 import org.sirekanyan.rknfreebot.config.Config
 import org.sirekanyan.rknfreebot.config.ConfigKey.*
 import org.sirekanyan.rknfreebot.extensions.logError
@@ -18,7 +18,7 @@ import org.telegram.telegrambots.util.WebhookUtils
 val adminId = Config[ADMIN_ID]
 val botName = Config[BOT_USERNAME]
 val botToken = Config[BOT_TOKEN]
-private val commands: List<Command> =
+private val textCommands: List<TextCommand> =
     listOf(
         LocalizedCommand("/start", Controller::start, "get a key for free", "получить ключ бесплатно"),
         LocalizedCommand("/invite", Controller::invite, "invite a friend", "пригласить друга"),
@@ -33,7 +33,7 @@ class Bot : DefaultAbsSender(DefaultBotOptions(), botToken), LongPollingBot {
     private val factory = ControllerFactory()
 
     init {
-        val localizedCommands = commands.filterIsInstance<LocalizedCommand>()
+        val localizedCommands = textCommands.filterIsInstance<LocalizedCommand>()
         val ruCommands = localizedCommands.map(LocalizedCommand::ru)
         val enCommands = localizedCommands.map(LocalizedCommand::en)
         val scope = BotCommandScopeDefault.builder().build()
@@ -58,7 +58,7 @@ class Bot : DefaultAbsSender(DefaultBotOptions(), botToken), LongPollingBot {
             controller.onDocument(document)
             return
         }
-        for (command in commands) {
+        for (command in textCommands) {
             if (command.execute(controller, controller.data)) {
                 return
             }

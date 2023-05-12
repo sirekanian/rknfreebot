@@ -8,10 +8,10 @@ import kotlin.text.RegexOption.IGNORE_CASE
 class RegularCommand(
     private val words: List<String>,
     private val action: (Controller, String?) -> Unit,
-) : Command {
+) : TextCommand {
 
-    override fun execute(controller: Controller, message: String?): Boolean {
-        val argument = parseArgument(message)
+    override fun execute(controller: Controller, text: String?): Boolean {
+        val argument = parseArgument(text)
         when {
             argument == null -> return false
             argument.isBlank() -> action.invoke(controller, null)

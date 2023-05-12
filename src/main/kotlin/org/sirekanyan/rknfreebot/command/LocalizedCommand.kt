@@ -8,7 +8,7 @@ class LocalizedCommand(
     action: (Controller, String?) -> Unit,
     enDescription: String,
     ruDescription: String,
-) : Command by RegularCommand(listOf(word), action) {
+) : TextCommand by RegularCommand(listOf(word), action) {
 
     val en = BotCommand(word, enDescription)
 
