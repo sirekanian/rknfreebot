@@ -1,5 +1,6 @@
 package org.sirekanyan.rknfreebot
 
+import org.sirekanyan.rknfreebot.command.Command
 import org.sirekanyan.rknfreebot.command.LocalizedCommand
 import org.sirekanyan.rknfreebot.command.RegularCommand
 import org.sirekanyan.rknfreebot.command.TextCommand
@@ -18,6 +19,10 @@ import org.telegram.telegrambots.util.WebhookUtils
 val adminId = Config[ADMIN_ID]
 val botName = Config[BOT_USERNAME]
 val botToken = Config[BOT_TOKEN]
+private val commands: List<Command> =
+    listOf(
+        Command(Controller::onDocument),
+    )
 private val textCommands: List<TextCommand> =
     listOf(
         LocalizedCommand("/start", Controller::start, "get a key for free", "получить ключ бесплатно"),
@@ -54,9 +59,12 @@ class Bot : DefaultAbsSender(DefaultBotOptions(), botToken), LongPollingBot {
 
     private fun onUpdate(update: Update) {
         val controller = factory.createController(this, update)
-        update.message?.document?.let { document ->
-            controller.onDocument(document)
-            return
+        (update.message ?: update.editedMessage)?.let { message ->
+            for (command in commands) {
+                if (command.execute(controller, message)) {
+                    return
+                }
+            }
         }
         for (command in textCommands) {
             if (command.execute(controller, controller.data)) {

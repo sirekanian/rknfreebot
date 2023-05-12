@@ -1,9 +1,9 @@
 package org.sirekanyan.rknfreebot
 
+import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.sirekanyan.rknfreebot.extensions.*
 import org.sirekanyan.rknfreebot.repository.KeyRepository
 import org.sirekanyan.rknfreebot.repository.UserRepository
-import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.telegram.telegrambots.bots.DefaultAbsSender
 import org.telegram.telegrambots.meta.api.objects.Document
 import org.telegram.telegrambots.meta.api.objects.Message
@@ -18,7 +18,7 @@ interface Controller {
     fun getKey(location: String?)
     fun showCat(id: String?)
     fun showStatus(id: String?)
-    fun onDocument(document: Document)
+    fun onDocument(message: Message): Boolean
 }
 
 class ControllerImpl(
@@ -109,7 +109,13 @@ class ControllerImpl(
     private fun join(pair: Pair<String, Long>): String =
         "${pair.first}: ${pair.second}"
 
-    override fun onDocument(document: Document) {
+    override fun onDocument(message: Message): Boolean {
+        val document = message.document ?: return false
+        onDocument(document)
+        return true
+    }
+
+    private fun onDocument(document: Document) {
         if (isAdmin && document.fileName.endsWith(OVPN_EXTENSION)) {
             val documentName = document.fileName.removeSuffix(OVPN_EXTENSION)
             val location = documentName.substringBeforeLast(LOCATION_DELIMITER)
